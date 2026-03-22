@@ -320,7 +320,7 @@ def train(model, dataloader, n_epochs, last_epoch=0, last_batch_in_epoch=-1):
 
             optimizer.zero_grad()
             output = model(rna, drug)
-            loss = torch.nn.functional.mse_loss(output, target) # Corrected typo: mse_mse_loss -> mse_loss
+            loss = torch.nn.functional.mse_loss(output, target)
             loss.backward()
             optimizer.step()
             if current_batch_id_for_checkpoint % 100 == 0:
