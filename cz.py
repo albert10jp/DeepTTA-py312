@@ -9,6 +9,8 @@ import timeit
 import scipy
 
 data_path = './data'
+checkpoint_dir = './models/'
+os.makedirs(checkpoint_dir, exist_ok=True)
 
 class Tokenization(MWETokenizer):
 
@@ -273,7 +275,6 @@ def custom_collate(batch):
 
 # split dataset and define dataloader
 train_set, test_set=torch.utils.data.random_split(dat, [int(0.9*dat.__len__()), dat.__len__()-int(0.9*dat.__len__())])
-
 trainloader=torch.utils.data.DataLoader(train_set,batch_size=128,shuffle=True, collate_fn=custom_collate)
 testloader=torch.utils.data.DataLoader(test_set,batch_size=128, collate_fn=custom_collate)
 
@@ -354,11 +355,7 @@ def test(model,dataloader):
   return avg_loss, avg_correlation
 
 # Checkpoint loading logic
-checkpoint_dir = './models/'
-os.makedirs(checkpoint_dir, exist_ok=True)
-
 list_of_files = glob.glob(os.path.join(checkpoint_dir, 'model1_checkpoint_batch_*'))
-
 last_epoch_loaded = 0
 last_batch_in_epoch_loaded = -1 # Use -1 to indicate no batch was processed in the last epoch
 
@@ -382,4 +379,5 @@ if list_of_files:
 else:
     print("No checkpoints found. Starting training from scratch.")
 
-train(net, trainloader, 2, last_epoch=last_epoch_loaded, last_batch_in_epoch=last_batch_in_epoch_loaded)
+if __name__ == "__main__":
+    train(net, trainloader, 2, last_epoch=last_epoch_loaded, last_batch_in_epoch=last_batch_in_epoch_loaded)
